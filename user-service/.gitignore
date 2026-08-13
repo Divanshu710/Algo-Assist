@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Security & Secret Configurations
+src/main/resources/application.properties
+*.env
+*.log
+.DS_Store
