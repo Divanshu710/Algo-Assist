@@ -1,13 +1,17 @@
-package com.codingapp.backend;
+package com.codingapp.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendApplication {
+public class UserServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+
+
+		SpringApplication.run(UserServiceApplication.class, args);
+
+
 	}
 
 }
