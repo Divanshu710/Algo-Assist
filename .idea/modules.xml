@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Java-Microservices.iml" filepath="$PROJECT_DIR$/.idea/Java-Microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api-gateway/api-gateway.iml" filepath="$PROJECT_DIR$/api-gateway/api-gateway.iml" />
     </modules>
   </component>
 </project>
