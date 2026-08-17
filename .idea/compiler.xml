@@ -24,6 +24,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="backend" options="-parameters" />
       <module name="problem-service" options="-parameters" />
+      <module name="submission-service" options="-parameters" />
     </option>
   </component>
 </project>
