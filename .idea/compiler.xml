@@ -10,12 +10,14 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="submission-service" />
         <module name="api-gateway" />
         <module name="backend" />
         <module name="problem-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="submission-service" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
