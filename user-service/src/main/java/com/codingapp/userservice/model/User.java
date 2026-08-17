@@ -33,6 +33,18 @@ public class User {
     @Builder.Default
     private UserTier userTier = UserTier.FREE;
 
+    @Column(name = "easy_solved", nullable = false)
+    @Builder.Default
+    private int easySolved = 0;
+
+    @Column(name = "medium_solved", nullable = false)
+    @Builder.Default
+    private int mediumSolved = 0;
+
+    @Column(name = "hard_solved", nullable = false)
+    @Builder.Default
+    private int hardSolved = 0;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

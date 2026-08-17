@@ -19,6 +19,10 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
 
     public ProblemResponse createProblem(ProblemRequest request, String authorId) {
+
+        if (problemRepository.existsByTitle(request.getTitle())) {
+            throw new ResourceNotFoundException("Title already exists");
+        }
         Problem problem = Problem.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
