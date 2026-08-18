@@ -9,6 +9,9 @@ import com.codingapp.submissionservice.model.Submission;
 import com.codingapp.submissionservice.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -25,6 +28,10 @@ public class SubmissionService {
     private final ProblemClient problemClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    @Caching(evict = {
+            @CacheEvict(value = "userSubmissions", key = "#userId"),
+            @CacheEvict(value = "userProblemSubmissions", key = "#userId + '-' + #request.problemId")
+    })
     public SubmissionResponse submitCode(SubmissionRequest request, String userId) {
         log.info("Processing submission for user {} and problem {}", userId, request.getProblemId());
 
@@ -172,6 +179,18 @@ public class SubmissionService {
             log.error("Judge0 execution failed for custom run", e);
             throw new ExternalServiceException("Failed to execute custom test case on Judge0");
         }
+    }
+
+    @Cacheable(value = "userProblemSubmissions", key = "#userId + '-' + #problemId")
+    public List<Submission> getUserSubmissionsForProblem(String userId, Long problemId) {
+        log.info("CACHE MISS! Fetching submissions for user: {} and problem: {}", userId, problemId);
+        return submissionRepository.findByUserIdAndProblemIdOrderByCreatedAtDesc(userId, problemId);
+    }
+
+    @Cacheable(value = "userSubmissions", key = "#userId")
+    public List<Submission> getUserSubmissions(String userId) {
+        log.info("CACHE MISS! Fetching submission history from PostgreSQL for user: {}", userId);
+        return submissionRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     /**

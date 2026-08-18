@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubmissionResponse {
+public class SubmissionResponse implements Serializable {
     private UUID submissionId;
     private Long problemId;
     private String verdict;          // e.g., "Accepted", "Wrong Answer"

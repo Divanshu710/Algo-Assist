@@ -5,6 +5,7 @@ import com.codingapp.userservice.model.User;
 import com.codingapp.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,9 @@ public class UserEventConsumerService {
      * Listens to the "problem-solved-topic".
      * Whenever a message arrives, Spring Boot automatically triggers this method.
      */
-    @Transactional // Ensures the database update is handled safely
+    @Transactional
+    // Ensures the database update is handled safely
+    @CacheEvict(value = "userProfiles", key = "#event.userId")
     @KafkaListener(topics = "problem-solved-topic", groupId = "user-service-group")
     public void consumeProblemSolvedEvent(ProblemSolvedEvent event) {
         log.info("Received ProblemSolvedEvent for user: {} and problem: {}", event.getUserId(), event.getProblemId());

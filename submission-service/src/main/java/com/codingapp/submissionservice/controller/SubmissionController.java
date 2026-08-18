@@ -70,12 +70,31 @@ public class SubmissionController {
 
         log.info("Fetching submission history for user: {}", userId);
 
-        // We can use the repository directly here since there is no complex business logic needed
-        List<Submission> submissions = submissionRepository.findByUserId(userId);
+
+        List<Submission> submissions = submissionService.getUserSubmissions(userId);
 
         return ResponseEntity.ok(ApiResponse.<List<Submission>>builder()
                 .success(true)
                 .message("User submissions fetched successfully")
+                .data(submissions)
+                .build());
+    }
+
+    /**
+     * Fetches the submission history for the logged-in user for a SPECIFIC problem
+     */
+    @GetMapping("/user/problem/{problemId}")
+    public ResponseEntity<ApiResponse<List<Submission>>> getUserSubmissionsForProblem(
+            @RequestHeader("X-User-Id") String userId,
+            @PathVariable Long problemId) {
+
+        log.info("Fetching submission history for user: {} and problem: {}", userId, problemId);
+
+        List<Submission> submissions = submissionService.getUserSubmissionsForProblem(userId, problemId);
+
+        return ResponseEntity.ok(ApiResponse.<List<Submission>>builder()
+                .success(true)
+                .message("Problem specific submissions fetched successfully")
                 .data(submissions)
                 .build());
     }
