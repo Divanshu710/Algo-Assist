@@ -7,8 +7,11 @@ import com.codingapp.problem_service.model.Problem;
 import com.codingapp.problem_service.model.TestCase;
 import com.codingapp.problem_service.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
+    @CacheEvict(value="allProblems", allEntries=true)
     public ProblemResponse createProblem(ProblemRequest request, String authorId) {
 
         if (problemRepository.existsByTitle(request.getTitle())) {
@@ -37,6 +41,7 @@ public class ProblemService {
         return mapToProblemResponse(savedProblem);
     }
 
+    @Cacheable(value="problem", key="#id")
     public ProblemResponse getProblemById(Long id){
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Problem not found"));
@@ -44,6 +49,7 @@ public class ProblemService {
         return mapToProblemResponse(problem);
     }
 
+    @Cacheable(value = "allProblems")
     public List<ProblemResponse> getAllProblems(){
 
         return problemRepository.findAll()
@@ -68,5 +74,24 @@ public class ProblemService {
                 .authorId(problem.getAuthorId())
                 .build();
 
+    }
+
+    // ... your existing methods ...
+
+    public ProblemResponse getFullProblemByIdInternal(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Problem not found"));
+
+        // Return the response with ALL test cases (No subList!)
+        return ProblemResponse.builder()
+                .id(problem.getId())
+                .title(problem.getTitle())
+                .description(problem.getDescription())
+                .difficulty(problem.getDifficulty())
+                .timeLimitMs(problem.getTimeLimitMs())
+                .memoryLimitMb(problem.getMemoryLimitMb())
+                .testCases(new ArrayList<>(problem.getTestCases())) // Sends every single test case!
+                .authorId(problem.getAuthorId())
+                .build();
     }
 }
