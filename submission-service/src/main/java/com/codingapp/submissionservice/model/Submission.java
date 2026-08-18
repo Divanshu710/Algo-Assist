@@ -2,6 +2,8 @@ package com.codingapp.submissionservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Submission {
+public class Submission implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

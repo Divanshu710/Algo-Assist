@@ -69,4 +69,22 @@ public class ProblemController {
 
         return ResponseEntity.ok(response);
     }
+
+    // ... your existing endpoints ...
+
+    // 4. INTERNAL API: Fetch problem with ALL test cases (For submission-service only)
+    @GetMapping("/internal/problem/{id}")
+    public ResponseEntity<ApiResponse<ProblemResponse>> getFullProblemInternal(@PathVariable Long id) {
+
+        ProblemResponse problem = problemService.getFullProblemByIdInternal(id);
+
+        ApiResponse<ProblemResponse> response = new ApiResponse<>(
+                true,
+                "Internal problem fetched successfully",
+                problem,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.ok(response);
+    }
 }
