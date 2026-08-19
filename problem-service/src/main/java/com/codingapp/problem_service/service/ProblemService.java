@@ -78,11 +78,15 @@ public class ProblemService {
 
     // ... your existing methods ...
 
+    // Inside your ProblemServiceImpl.java
+
     public ProblemResponse getFullProblemByIdInternal(Long id) {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Problem not found"));
 
-        // Return the response with ALL test cases (No subList!)
+        // Calculate maxScore safely based on the number of test cases
+        int calculatedScore = (problem.getTestCases() != null) ? problem.getTestCases().size() : 0;
+
         return ProblemResponse.builder()
                 .id(problem.getId())
                 .title(problem.getTitle())
@@ -90,8 +94,9 @@ public class ProblemService {
                 .difficulty(problem.getDifficulty())
                 .timeLimitMs(problem.getTimeLimitMs())
                 .memoryLimitMb(problem.getMemoryLimitMb())
-                .testCases(new ArrayList<>(problem.getTestCases())) // Sends every single test case!
+                .testCases(problem.getTestCases())
                 .authorId(problem.getAuthorId())
+                .maxScore(calculatedScore) // ADD THIS LINE!
                 .build();
     }
 }

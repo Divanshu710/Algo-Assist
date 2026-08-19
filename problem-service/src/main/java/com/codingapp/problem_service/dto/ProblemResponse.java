@@ -24,5 +24,6 @@ public class ProblemResponse implements Serializable {
     private Integer memoryLimitMb;
     private List<TestCase> testCases;
     private String authorId;
+    private Integer maxScore;
 
 }
